@@ -1,0 +1,22 @@
+.inventory-menu-wrapper ul, .inventory-menu-wrapper li{
+	margin: 5px;
+}
+.inventory-menu-wrapper .main-menu{
+	font-weight: bold;
+	display: block;
+	margin: 20px;
+}
+.inventory-menu-wrapper .submenu{
+	font-weight: normal;
+	margin: 0 0 0 3%;
+}
+.inventory-menu-wrapper .list-inline li{
+	display: block;
+}
+.ln_solid {
+    border-top: 1px solid #e5e5e5;
+    color: #ffffff;
+    background-color: #ffffff;
+    height: 1px;
+    margin: 20px 0;
+}

@@ -1,0 +1,44 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let itemsPerPage = document.getElementById('itemsPerPage');
+        let delayTimer;
+
+        function fetchUsers() {
+            // Collect query parameters
+            let query = new URLSearchParams({
+                items_per_page: itemsPerPage.value,
+                page: 1 // Reset to first page on new search
+            }).toString();
+            
+            // Fetch updated user list
+            fetch(`?${query}`)
+                .then(response => response.text())
+                .then(html => {
+                    
+                    // document.querySelector('#user-table').innerHTML = html;
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+
+                    // // Extract table and pagination HTML
+                    let newTableHtml = tempDiv.querySelector('#user-table').innerHTML;
+                    let newPaginationHtml = tempDiv.querySelector('#pagination-controls').innerHTML;
+
+                    // // Update only the table and pagination
+                    document.querySelector('#user-table').innerHTML = newTableHtml;
+                    document.querySelector('#pagination-controls').innerHTML = newPaginationHtml;
+                });
+        }
+
+        function debounce(func, delay) {
+            return function (...args) {
+                clearTimeout(delayTimer);
+                delayTimer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // Add event listeners with debounce for input fields
+        //searchName.addEventListener('input', debounce(fetchUsers, 1000));
+        //searchEmail.addEventListener('input', debounce(fetchUsers, 1000));
+        itemsPerPage.addEventListener('change', fetchUsers);
+    });
+</script>

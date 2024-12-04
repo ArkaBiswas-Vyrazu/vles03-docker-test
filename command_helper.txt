@@ -1,0 +1,2 @@
+adding heroku remote : git remote add heroku https://git.heroku.com/vles-03-dev.git
+pushing to heroku using git : git subtree push --prefix inventoryManagement heroku main

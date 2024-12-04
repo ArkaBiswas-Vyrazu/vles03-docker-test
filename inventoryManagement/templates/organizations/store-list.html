@@ -1,0 +1,137 @@
+{% extends "base-layout.html" %}
+{% load static %}
+
+{% block title %}Store List{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/css/pages/simple-datatables.css' %}">
+<style>
+    .table-dark td {
+        color: #c2c2d9;
+    }
+
+    .table-dark:hover {
+        box-shadow: inset 0 0 0 9999px var(#323539);
+        color: #fff;
+    }
+
+    .dataTable-top {
+        padding: 10px 0;
+    }
+
+    .dataTable-bottom {
+        padding: 10px 0;
+    }
+
+    body.theme-dark .table,
+    body.theme-dark .dataTable-table {
+        --bs-table-bg: transparent;
+        --bs-table-accent-bg: transparent;
+        --bs-table-striped-color: #607080;
+        --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+        --bs-table-active-color: #607080;
+        --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+        --bs-table-hover-color: #fff;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.075);
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #c2c2d9;
+        vertical-align: top;
+        border-color: rgb(63, 63, 63);
+    }
+
+    body.theme-dark th {
+        color: #c2c2d9;
+    }
+
+    body.theme-dark td {
+        color: #c2c2d9;
+    }
+
+    body.theme-light th,
+    td {
+        color: #607080;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h3>Stores List</h3>
+                <p class="text-subtitle text-muted">A list of all the stores</p>
+            </div>
+            <div>
+                <a href="{% url 'organizations:create_store' %}" class="btn btn-success pull-right">Add Stores</a>
+            </div>
+        </div>
+    </div>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{message.tags}}{% endif %} alert-dismissible fade show"
+        role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <section class="section">
+        <div class="card">
+
+            <div class="card-body">
+                <table class="table table-striped table-hover" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Sl</th>
+                            <th>Store Head</th>
+                            <th>Store Name</th>
+                            <th>Short Code</th>
+                            <th>Full Address</th>
+                            <th>Store Currency</th>
+                            <th>Status</th>
+                            {% if user.is_admin %}
+                            <th>Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stores %}
+                        {% for store in stores %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{store.store_head}}</td>
+                            <td>{{store.name}}</td>
+                            <td>{{store.short_code}}</td>
+                            <td>{{store.addresses}}</td>
+                            <td>{{store.store_currency}}</td>
+                            <td>
+                                {% if store.status == 1 %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Disabled</span>
+                                {% endif %}
+                            </td>
+                            {% if user.is_admin %}
+                            <td>
+                                <a href="{% url 'organizations:edit_store' store.store_id %}"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="{% url 'organizations:delete_store' store.store_id %}"><i
+                                        class="fa fa-trash"></i></a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+
+<script src="{% static 'assets/js/extensions/simple-datatables.js' %}"></script>
+
+{% endblock %}

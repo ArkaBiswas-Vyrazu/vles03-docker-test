@@ -1,0 +1,152 @@
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="modal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/users/update-user/" id="editForm" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="original_email" id="originalEmail">
+          <div class="form-group">
+            <label for="{{ formone.edit_email.id_for_label }}">Email</label>
+            {{ formone.edit_email }}
+          </div>
+          <div class="form-group">
+            <label for="{{ formone.edit_name.id_for_label }}">Name</label>
+            {{ formone.edit_name }}
+          </div>
+          <div class="form-group">
+            <label for="{{ formone.edit_password.id_for_label }}">Password</label>
+            {{ formone.edit_password }}
+          </div>
+          <div class="form-group d-flex gap-2">
+            <!-- <label>IP Lock <input  type="checkbox" id="showInput"/></label>
+            <input type="text" id="myInput" style="display: none; max-width: 300px; margin-left: 10px" value={{ formone.ip_lock_address }}> -->
+            <label for="id_show_details">{{ formone.edit_ip_lock.label }}</label>
+            {{ formone.edit_ip_lock}}
+          </div>
+          <div id="edit-details-field" style="display: none;">
+            {{ formone.edit_ip_lock_address }}
+          </div>
+          <!-- <div class="col-md-6 mb-4"> -->
+            <div class="form-group">
+              <label for="{{ formone.edit_role.id_for_label }}">Role</label>
+              {{ formone.edit_role }} <!-- This should render a <select> element -->
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+
+  function edittoggleDetails() {
+
+    const checkbox = document.getElementById('id_edit_ip_lock');
+    const detailsField = document.getElementById('edit-details-field');
+
+    detailsField.style.display = checkbox.checked ? 'block' : 'none';
+
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    edittoggleDetails(); // Run on page load
+    document.getElementById('id_edit_ip_lock').addEventListener('change', edittoggleDetails);
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var editUserModal = document.getElementById('editUserModal');
+    editUserModal.addEventListener('show.bs.modal', function (event) {
+      // Get data attributes from the button that triggered the modal
+      var button = event.relatedTarget; // Button that triggered the modal
+      var name = button.getAttribute('data-name');
+      var email = button.getAttribute('data-email');
+      var role = button.getAttribute('data-role')
+      var iplock = button.getAttribute('data-iplock')
+      var ipLockCheckbox = document.getElementById('id_edit_ip_lock');
+
+      // Find the form fields within the modal by their IDs
+      var nameField = document.querySelector('#editForm input[name="edit_name"]');
+      var emailField = document.querySelector('#editForm input[name="edit_email"]');
+      var originalEmailField = document.querySelector('#editForm input[name="original_email"]');
+      // var roleField = document.querySelector('#editForm input[name="edit_role"]')
+      var iplockField = document.querySelector('#editForm input[name="edit_ip_lock_address"]')
+      var roleField = document.getElementById('id_edit_role');
+
+
+      // Set the values in the form fields
+      if (nameField) {
+        nameField.value = name;
+      }
+      if (emailField) {
+        emailField.value = email;
+      }
+      if (originalEmailField) {
+        originalEmailField.value = email;
+      }
+
+      if (roleField) {
+        roleField.value = role === 'True' ? '1' : '0';
+        }
+
+        
+        if (iplock !== null && iplock.trim() !== "" && iplock !== "None") {
+          ipLockCheckbox.checked = true; // Check the checkbox
+          edittoggleDetails(); // Ensure details are shown
+        } else {
+          iplock = "";
+          ipLockCheckbox.checked = false; // Uncheck the checkbox if no value
+          edittoggleDetails(); // Ensure details are hidden
+        }
+        
+              if (iplockField) {
+                iplockField.value = iplock
+              }
+
+    });
+  });
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#editForm').on('submit', function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      var form = $(this);
+      var url = form.attr('action');
+      var data = form.serialize();
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        success: function (response) {
+          console.log(response)
+          if (response.success) {
+            location.reload();
+            // $('#addUserModal').modal('hide');
+          } else {
+            console.log(response);
+
+            alert('An error occurred: ' + response.error);
+          }
+        },
+        error: function (xhr, status, error) {
+          // Handle AJAX errors
+          console.error('AJAX Error: ', status, error);
+        }
+      });
+    });
+  });
+
+</script>

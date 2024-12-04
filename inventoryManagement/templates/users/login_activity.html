@@ -1,0 +1,254 @@
+{% extends 'base-layout.html' %}
+
+{% block title %}User Logs{% endblock %}
+
+{% block css %}
+<style>
+    .table-dark td {
+        color: #c2c2d9;
+    }
+
+    .table-dark:hover {
+        box-shadow: inset 0 0 0 9999px var(#323539);
+        color: #fff;
+    }
+
+    .dataTable-top {
+        padding: 10px 0;
+    }
+
+    .dataTable-bottom {
+        padding: 10px 0;
+    }
+
+    body.theme-dark .table,
+    body.theme-dark .dataTable-table {
+        --bs-table-bg: transparent;
+        --bs-table-accent-bg: transparent;
+        --bs-table-striped-color: #607080;
+        --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+        --bs-table-active-color: #607080;
+        --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+        --bs-table-hover-color: #fff;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.075);
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #c2c2d9;
+        vertical-align: top;
+        border-color: rgb(63, 63, 63);
+    }
+
+    body.theme-dark th {
+        color: #c2c2d9;
+    }
+
+    body.theme-dark td {
+        color: #c2c2d9;
+    }
+
+    body.theme-light th,
+    td {
+        color: #607080;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">User Logs</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Striped rows start -->
+    <section class="section">
+        <div class="row" id="table-striped">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header justify-content-between">
+                        <h4 class="card-title">Login Activity</h4>
+                        </br>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body pt-0 pb-0">
+                            <form action="{% url 'users:login_activity' %}" method='get'>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="searchName">Search Name</label>
+                                        <input type="text" id="searchName" class="form-control round"
+                                            placeholder="Type user name" name='search_name'>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="searchEmail">Search Email</label>
+                                        <input type="text" id="searchEmail" class="form-control round"
+                                            placeholder="Type user email" name='search_email'>
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <button type='submit' class="btn btn-primary float-end">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="d-flex justify-content-between p-4">
+                            <div>
+                                <label for="itemsPerPage">Items Per Page</label>
+                                <select id="itemsPerPage" class="form-control" name="items_per_page">
+                                    <option value="?items_per_page=25" {% if items_per_page == '25' %}selected{% endif %}>
+                                        25</option>
+                                    <option value="?items_per_page=50" {% if items_per_page == '50' %}selected{% endif %}>
+                                        50</option>
+                                    <option value="?items_per_page=100" {% if items_per_page == '100' %}selected{% endif %}>100</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- table striped -->
+                        <div class="table-responsive p-4" id="user-table">
+                            <table class="table table-striped mb-0 table-border">
+                                <thead>
+                                    <th>SL</th>
+                                    <th>NAME</th>
+                                    <th>EMAIL</th>
+                                    <th>LOGIN TIME</th>
+                                    <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in users %}
+                                    <tr>
+                                        <td class="text-bold-500">{{ forloop.counter }}</td>
+                                        <td>{{ log.user.name }}</td>
+                                        <td class="text-bold-500">{{ log.user.email }}</td>
+                                        <td>{{ log.login_time }}</td>
+                                        <td class=''>
+                                            <!-- <a href="#" class="btn btn-primary float-start m-1" data-bs-toggle="modal" data-bs-target="#editUserModal" data-name="{{ user.name }}" data-email="{{ user.email }}" data-role="{{user.is_admin}}"><i class="fa fa-solid fa-pen"></i></a> -->
+
+                                            <form action="{% url 'users:delete_log' log.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button onclick="return confirm('Are you sure?')" type="submit"
+                                                    class="btn btn-danger btn-delete" id="log-delete"
+                                                    data-url="{% url 'users:delete_log' log.id %}">
+                                                    <i class="fa fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">No logs found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Pagination controls -->
+                        <div class="pagination-controls px-4 d-flex justify-content-end" id="pagination-controls">
+                            <ul class="pagination">
+                                {% if users.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&items_per_page={{ items_per_page }}"
+                                        aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ users.previous_page_number }}&items_per_page={{ items_per_page }}"
+                                        aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in users.paginator.page_range %}
+                                {% if users.number == num %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">{{ num }}</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}&items_per_page={{ items_per_page }}">{{ num }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+
+                                {% if users.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ users.next_page_number }}&items_per_page={{ items_per_page }}"
+                                        aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ users.paginator.num_pages }}&items_per_page={{ items_per_page }}"
+                                        aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script>
+    function formatDate(dateString) {
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+        };
+
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', options).replace(',', ''); // Remove the comma between date and time
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on('click', '#log-delete', function (event) {
+            event.preventDefault();
+            const deleteUrl = $(this).data('url');
+            const confirmed = confirm('Are you sure you want to delete this user?');
+            console.log(deleteUrl);
+            
+    
+            if (confirmed) {
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        // Refresh the page or remove the row from the table
+                        location.reload();
+                    },
+                    error: function (xhr, errmsg, err) {
+                        alert('An error occurred while deleting the user.', status, error);
+                    }
+                });
+            }
+        });
+    </script>
+{% include 'users/modal.html' %}
+{% include 'users/editmodal.html' %}
+{% include 'users/search.html' %}
+</div>
+{% endblock %}

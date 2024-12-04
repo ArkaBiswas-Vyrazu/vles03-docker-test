@@ -1,0 +1,73 @@
+{% extends "base-layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Warehouse Create{% endblock %}
+
+{% block css %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h3>Warehouse Creation</h3>
+                <p class="text-subtitle text-muted">Add your warehouse to our database</p>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <!--
+                        <form class="form form-horizontal" method="POST" action="{% url 'organizations:create_warehouse' %}">
+                            {% csrf_token %}
+                            <div class="form-body">
+                                <div class="row">
+                                    {% for fm in w_form %}
+                                    <div class="col-md-4"><label for="{{fm.id_for_label}}">{{fm.label}}</label></div>
+                                    <div class="form-group col-md-8">{{fm}}</div>
+                                    {% if fm.errors %}
+                                    {% for error in fm.errors %}
+                                    <p class="text-danger">{{error|striptags}}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% for fm in a_form %}
+                                    <div class="col-md-4"><label for="{{fm.id_for_label}}">{{fm.label}}</label></div>
+                                    <div class="form-group col-md-8">{{fm}}</div>
+                                    {% if fm.errors %}
+                                    {% for error in fm.errors %}
+                                    <p class="text-danger">{{error|striptags}}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-12 d-flex justify-content-center"><input type="submit" value="Submit"
+                                    class="btn btn-success me-1 mb-1"><input type="reset" value="Reset"
+                                    class="btn btn-secondary me-1 mb-1"></div>
+                        </form> -->
+                    <form action="{% url 'organizations:create_warehouse' %}" method="POST"
+                        class="form form-horizontal">
+                        {% csrf_token %}
+                        {% crispy w_form %}
+                        {% crispy a_form %}
+                        <div class="col-md-12 d-flex justify-content-end mt-2"><input type="submit" value="Submit"
+                                class="btn btn-success me-2 mb-1"><input type="reset" value="Reset"
+                                class="btn btn-secondary me-2 mb-1"><a href="{% url 'organizations:warehouses_list' %}"
+                                class="cancel btn btn-danger me-2 mb-1">Cancel</a></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div class="page-heading">
+{% endblock %}

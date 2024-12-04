@@ -1,0 +1,44 @@
+{% extends "base-layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Warehouse Edit{% endblock %}
+
+{% block css %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div class="page-title">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h3>Warehouse Edit</h3>
+                <p class="text-subtitle text-muted">Edit your warehouse details</p>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <form class="form form-horizontal" method="POST"
+                        action="{% url 'organizations:edit_warehouse' warehouse.warehouse_id %}">
+                        {% csrf_token %}
+                        {% crispy w_form %}
+                        {% crispy a_form %}
+                        <div class="col-md-12 d-flex justify-content-end"><input type="submit" value="Submit"
+                                class="btn btn-success me-2 mb-1"><input type="reset" value="Reset"
+                                class="btn btn-secondary me-2 mb-1"><a href="{% url 'organizations:warehouses_list' %}"
+                                class="cancel btn btn-danger me-2 mb-1">Cancel</a></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

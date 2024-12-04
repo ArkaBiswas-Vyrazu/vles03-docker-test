@@ -1,0 +1,64 @@
+.top{
+    display:flex;
+}
+
+.content-header{
+    font-size: 25px;
+}
+
+.content-header-first{
+    font-size: 25px;
+}
+
+.query-history{
+    width:300px;height:850px;border:solid 1px; padding:20px;
+}
+
+.paginator{
+    top: 800px;
+}
+
+.add-query{
+    border: solid 1px black;
+}
+
+#Add-New{
+    background-color: #0178ff;
+    height:26px;
+    margin-top: 50px;
+    padding-right: 110px;
+    margin-bottom: 20px;
+    color: aliceblue;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+
+.btn btn-primary btn-block my-4 compose-btn{
+    width:190px
+}
+
+.new-query{
+    border:solid 2px; padding:20px;width:1300px
+}
+
+.drops{
+    display:flex;justify-content:space-evenly;
+}
+#content-text{
+    width:450px;
+}
+#submit{
+    width:190px;margin-left:1000px;
+}
+#first-name-vertical-l{
+    height:150px;
+}
+#history{
+    margin-left: 65px;
+}
+
+.history-content{
+    height:700px;
+    background-color: whitesmoke;
+}

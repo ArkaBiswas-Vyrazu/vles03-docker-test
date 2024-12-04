@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mazer Admin Dashboard</title>
+    {% load static %}
+    {% block css %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/app-dark.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/mediaQuery.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/images/logo/favicon.svg' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'assets/images/logo/favicon.png' %}" type="image/png">
+    {% endblock %}
+</head>
+
+<body>
+    <div id="auth">
+        
+<div id="maindiv" class="row h-100">
+    <div id="div1" class="col-lg-5 col-12 w-50">
+        <div id="auth-left">
+            <div class="auth-logo">
+                <a href="index.html"><img src="{% static 'assets/images/logo/logo.svg' %}" alt="Logo"></a>
+            </div>
+            <h1 class="auth-title">Log in with OTP.</h1>
+            <p class="auth-subtitle mb-5">Enter the OTP that has been sent.</p>
+
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="form-group position-relative has-icon-left mb-4">
+                    <label for="OTP">Enter OTP:</label>
+                    <input type="text" class="form-control form-control-xl" placeholder="" name="otp" required>
+                    <div class="form-control-icon  mr-3 mt-2 ml-2 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17l0 80c0 13.3 10.7 24 24 24l80 0c13.3 0 24-10.7 24-24l0-40 40 0c13.3 0 24-10.7 24-24l0-40 40 0c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/></svg>
+                    </div>
+                    </input>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-end justify-content-between">
+                    <div>
+                        <input class="form-check-input me-2 mb-3" type="checkbox" value="1" id="flexCheckDefault" name="keep_me_logged_in">
+                        <label class="form-check-label text-gray-600 pt-2" for="flexCheckDefault">
+                            Keep me logged in
+                        </label>
+                    </div>
+                    <p><a href="{% url 'users:resend_otp' %}" class="font-bold">Resend OTP</a>.</p>
+                </div>
+                <button type='submit' class="btn btn-primary btn-block btn-lg shadow-lg mt-5" value="Login">Verify</button>
+                {% if context %}
+                <p class="auth-subtitle mb-2 color-red">{{context}}</p>
+                {% endif %}
+                {% if otp_message %}
+                <p class="auth-subtitle mb-2 color-red">{{otp_message}}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div id="div2" class="col-lg-7 d-none d-lg-block w-50">
+        <div id="auth-right" class="p-5 d-flex justify-content-center align-items-center">
+            <img id="side-banner" src="{% static 'assets/images/otp_imgs.svg' %}" alt="Otp">
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
