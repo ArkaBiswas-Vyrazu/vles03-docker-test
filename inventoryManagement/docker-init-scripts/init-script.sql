@@ -7,10 +7,10 @@ CREATE DATABASE IF NOT EXISTS `IMS_DEV`
     /*!80016 DEFAULT ENCRYPTION='N' */;
 
 -- Create the user if not exists (using backticks for username)
-CREATE USER IF NOT EXISTS 'user1'@'%' IDENTIFIED BY 'Password@123';
+CREATE USER IF NOT EXISTS `user1`@`%` IDENTIFIED BY `Password@123`;
 
 -- Grant all privileges to the user for the specific database (not global)
-GRANT ALL PRIVILEGES ON `IMS_DEV`.* TO 'user1'@'%';
+GRANT ALL PRIVILEGES ON `IMS_DEV`.* TO `user1`@`%`;
 
 -- Ensure privileges are flushed so they take effect
 FLUSH PRIVILEGES;
